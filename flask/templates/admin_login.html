@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <style>
+        /* Body 스타일: 화면 중앙에 콘텐츠 배치 */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        /* 로그인 폼 컨테이너 스타일 */
+        .login-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        /* 제목 스타일 */
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* 입력 필드 및 버튼 스타일 */
+        input[type="password"] {
+            width: 93%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* 오류 메시지 스타일 */
+        .error-message {
+            color: red;
+            margin-bottom: 20px;
+        }
+
+        /* 추가적인 마진을 위한 공백 */
+        p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>관리자 로그인</h1>
+        {% if error %}
+        <p class="error-message">{{ error }}</p>
+        {% endif %}
+        <form method="POST">
+            <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+            <button type="submit">로그인</button>
+        </form>
+    </div>
+</body>
+</html>

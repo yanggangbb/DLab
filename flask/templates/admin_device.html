@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Device Management</title>
+    <style>
+        /* Body와 페이지 내의 모든 요소를 가운데 정렬 */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+
+            align-items: center;
+            flex-direction:column;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        /* 전체 컨텐츠 영역을 중앙에 배치 */
+        h1 {    
+            text-align: center;
+        }
+
+        /* 표 스타일 */
+        table {
+            border-collapse: collapse;
+            width: 80%;  /* 테이블의 너비를 80%로 설정 */
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 표의 헤더 스타일 */
+        th {
+            background-color: #0088FF;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* 표의 셀 스타일 */
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        /* 표의 행에 마우스 호버 시 색상 변경 */
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* 버튼 스타일 */
+        button {
+            background-color: #0088FF;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+
+        button:hover {
+            background-color: #0061B5;
+        }
+
+        /* 링크 스타일 */
+        a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            margin: 10px 0;
+            display: block;
+            text-align: center;
+        }
+
+        a:hover {
+            color: #0088FF;
+        }
+    </style>
+</head>
+<body>
+    <h1>노트북/태블릿 대여 현황</h1>
+    <a href="/admin_logout">로그아웃</a>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>학번</th>
+                <th>이름</th>
+                <th>기기 유형</th>
+                <th>대여 날짜</th>
+                <th>기기번호</th>
+                <th>반납일자</th>
+                <th>관리</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rental in rentals %}
+            <tr>
+                <td>{{ rental.id }}</td>
+                <td>{{ rental.student_id }}</td>
+                <td>{{ rental.student_name }}</td>
+                <td>{{ rental.device_type }}</td>
+                <td>
+                    {{ rental.device_number or '-' }}
+                    <button onclick="updateDeviceNumber({{ rental.id }})">수정</button>
+                </td>
+                <td>{{ rental.rental_date }}</td>
+                <td>{{ rental.return_date or '미반납' }}</td>
+                <td>
+                    <button onclick="updateReturnDate({{ rental.id }})">반납</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        // 기기번호 수정
+        const updateDeviceNumber = (id) => {
+            const newDeviceNumber = prompt("새 기기번호를 입력하세요:");
+            if (newDeviceNumber) {
+                fetch('/api/update_device_number', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `id=${id}&device_number=${newDeviceNumber}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    location.reload(); // 페이지 새로 고침
+                })
+                .catch(error => {
+                    alert("오류가 발생했습니다. 다시 시도해주세요.");
+                    console.error('Error:', error);
+                });
+            }
+        }
+
+        // 반납일자 반영을 위한 함수
+        const updateReturnDate = (id) => {
+            if (confirm("반납 확인이 되었다면 '확인'을 눌러주세요.")) {
+                fetch('/api/update_return_date', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: id })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    location.reload(); // 페이지 새로 고침
+                })
+                .catch(error => {
+                    alert("오류가 발생했습니다. 다시 시도해주세요.");
+                    console.error('Error:', error);
+                });
+            }
+        }       
+
+    </script>
+</body>
+</html>

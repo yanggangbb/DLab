@@ -1,0 +1,68 @@
+<!-- app/static/activity_form.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>활동 입력</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .result {
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>활동에 대해 교실 추천 받기</h1>
+        <form id="activityForm">
+            <label for="activity">활동 종류를 입력하세요 (예: AI 개발):</label>
+            <input type="text" id="activity" name="activity" required>
+            <button type="submit">교실 추천</button>
+        </form>
+        
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('activityForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const activity = document.getElementById('activity').value;
+
+            const response = await fetch('/recommend-classroom', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ activity })
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerHTML = `
+                <h3>추천된 교실</h3>
+                <p>교실 ID: ${result.classroom_id}</p>
+                <p>설명: ${result.explanation}</p>
+            `;
+        });
+    </script>
+</body>
+</html>
