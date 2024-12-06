@@ -1,0 +1,35 @@
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.floorName {
+  transition: all 0.5s ease-in-out;
+}
+
+.floorName.active {
+  background-color: #0088ff;
+}
+
+.floorName::after {
+  content: "";
+  position: absolute;
+  margin-left: 181px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 50px 0px 50px 40px;
+  border-color: transparent transparent transparent #0088ff;
+  transition: all 0.5s ease-in-out;
+  opacity: 0;
+}
+
+.floorName.active::after {
+  opacity: 1;
+}
+
+area:hover {
+  cursor: pointer;
+}
