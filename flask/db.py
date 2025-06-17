@@ -62,7 +62,7 @@ def init_lab_data():
     cursor = conn.cursor()
 
     # JSON 파일에서 lab_data 읽기
-    with open('D:\\SDHS\\24WebApp\\ai\\app\\data\\lab_data.json', 'r', encoding='utf-8') as file:
+    with open('C:\\Users\\jyn13\\OneDrive\\바탕 화면\\2024WebApp\\2024WebApp\\ai\\app\\data\\lab_data.json', 'r', encoding='utf-8') as file:
         lab_data = json.load(file)
 
     # 각 실습실 데이터 DB에 삽입
@@ -78,7 +78,7 @@ def init_lab_data():
             lab_info["disk"],
             lab_info["program"],
             lab_info["language"],
-            lab_info["Notes"],
+            lab_info["notes"],
             int(lab_info["count"]),
             lab_info["image_url"]
         ))

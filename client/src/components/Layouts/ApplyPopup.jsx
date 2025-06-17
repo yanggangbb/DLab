@@ -4,8 +4,15 @@ import axios from "axios";
 import RoundButton from "../Atoms/RoundButton";
 
 const ApplyPopup = ({ openBool, openPopup, selectRoom }) => {
+  const [openPop, setOpenPopup] = useState(true);
+
+  const openPopHandler = () => {
+    setOpenPopup(!openPop);
+  };
   const closePopup = (e) => {
-    if (e.target.className) {
+    console.log(e.target.classList.contains("close"));
+    if (e.target.classList.contains("close")) {
+      console.log(openPop);
       openPopup();
     }
   };
@@ -31,6 +38,22 @@ const ApplyPopup = ({ openBool, openPopup, selectRoom }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const { student_id, student_name, purpose, date, start_time, end_time } =
+      formData;
+
+    // 빈 값이 있는지 확인
+    if (
+      !student_id ||
+      !student_name ||
+      !purpose ||
+      !date ||
+      !start_time ||
+      !end_time
+    ) {
+      alert("모든 필드를 입력해주세요.");
+      return; // 빈 필드가 있을 경우 제출을 막음
+    }
+
     try {
       const response = await axios.post(
         "http://localhost:5000/submit_lab_application", // Flask endpoint
@@ -42,6 +65,21 @@ const ApplyPopup = ({ openBool, openPopup, selectRoom }) => {
         }
       );
       alert(response.data.message); // Success message from Flask
+
+      // 폼 제출 성공 후 팝업 닫기
+      openPopHandler();
+      openPopup();
+      setOpenPopup(true);
+      // 폼 데이터 초기화
+      setFormData({
+        student_id: "",
+        student_name: "",
+        purpose: "",
+        lab_id: selectRoom, // selectRoom은 이미 설정된 값이므로 그대로 유지
+        date: "",
+        start_time: "",
+        end_time: "",
+      });
     } catch (error) {
       console.error("Error submitting application:", error);
       alert("신청에 실패했습니다. 다시 시도해주세요.");
@@ -49,11 +87,7 @@ const ApplyPopup = ({ openBool, openPopup, selectRoom }) => {
   };
 
   return (
-    <Wrap
-      className="close"
-      onClick={closePopup}
-      style={{ display: openBool ? "flex" : "none" }}
-    >
+    <Wrap style={{ display: openBool && openPop ? "flex" : "none" }}>
       <ContentWrap>
         <RoomNumber>{selectRoom}호 사용신청</RoomNumber>
         <form onSubmit={handleSubmit}>
@@ -133,19 +167,46 @@ const ApplyPopup = ({ openBool, openPopup, selectRoom }) => {
               gap: "10px",
             }}
           >
-            <RoundButton
-              className="close"
-              onClick={closePopup}
-              WhiteColor={true}
-              Text={"취소"}
-            />
-            <RoundButton type="submit" WhiteColor={false} Text={"신청하기 "} />
+            <CancleButton type="button" className="close" onClick={closePopup}>
+              취소
+            </CancleButton>
+            <ApplyButton type="submit" className="close">
+              신청하기
+            </ApplyButton>
           </div>
         </form>
       </ContentWrap>
     </Wrap>
   );
 };
+
+const CancleButton = styled.button`
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: bold;
+  overflow: hidden;
+  word-break: keep-all;
+  outline: none;
+  border: none;
+  color: black;
+  background-color: #fff;
+`;
+
+const ApplyButton = styled.button`
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: bold;
+  overflow: hidden;
+  word-break: keep-all;
+  outline: none;
+  border: none;
+  color: white;
+  background-color: #0088ff;
+`;
 
 const Wrap = styled.div`
   position: fixed;

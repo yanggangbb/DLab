@@ -1,26 +1,29 @@
 import styled from "styled-components";
 import { useState } from "react";
-import LabtopApplySide from "../components/Layouts/LabtopApplySide";
-import TablitApplySide from "../components/Layouts/TablitApplySide";
+import LabtopApplySide from "../components/Atoms/LabtopApplySide";
+import TablitApplySide from "../components/Atoms/TablitApplySide";
 import MachineApplyPopup from "../components/Layouts/MachineApplyPopup";
 
 const MachineApplyPage = () => {
   const [openLabtop, setOpenLabtop] = useState(false);
+  const [openTablit, setOpenTablit] = useState(false);
+  const [openPop, setOpenPop] = useState(false);
+  const [option, setOption] = useState("");
+
+  const checkOption = (op) => {
+    setOption(op);
+  };
 
   const openApplyLabtop = () => {
     setOpenLabtop(!openLabtop);
   };
 
-  const [openTablit, setOpenTablit] = useState(false);
-
   const openApplyTablit = () => {
     setOpenTablit(!openTablit);
   };
 
-  const [openPop, setOpenPop] = useState(false);
   const openPopup = () => {
     setOpenPop(!openPop);
-    console.log("adfssadf");
   };
 
   return (
@@ -41,7 +44,11 @@ const MachineApplyPage = () => {
               src="../src/assets/img/labtop.png"
               alt=""
             />
-            <LabtopApplySide openPopup={openPopup} openBool={openLabtop} />
+            <LabtopApplySide
+              checkOption={checkOption}
+              openPopup={openPopup}
+              openBool={openLabtop}
+            />
           </ApplyWrap>
           <ApplyWrap>
             <img
@@ -49,10 +56,18 @@ const MachineApplyPage = () => {
               src="../src/assets/img/tablit.png"
               alt=""
             />
-            <TablitApplySide openPopup={openPopup} openBool={openTablit} />
+            <TablitApplySide
+              checkOption={checkOption}
+              openPopup={openPopup}
+              openBool={openTablit}
+            />
           </ApplyWrap>
         </ImgWrap>
-        <MachineApplyPopup openBool={openPop} openPopup={openPopup} />
+        <MachineApplyPopup
+          option={option}
+          openBool={openPop}
+          openPopup={openPopup}
+        />
       </Wrap>
     </>
   );

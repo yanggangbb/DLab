@@ -1,10 +1,20 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react"; // useEffect 추가
+import { useState, useEffect, useRef } from "react"; // useEffect 추가
 import axios from "axios";
-import RoundButton from "../Atoms/RoundButton";
 
-const MachineApplyPopup = ({ openBool, openPopup }) => {
+const MachineApplyPopup = ({ option, openBool, openPopup }) => {
   // 오늘 날짜를 "YYYY-MM-DD" 형식으로 설정
+  const [submitState, setSubmitState] = useState(true);
+  const [checkboxChecked, setCheckboxChecked] = useState(false); // 체크박스 상태
+  const MachineWrap = {
+    labtop: useRef(null),
+    tablit: useRef(null),
+  };
+
+  const submitStateHandler = () => {
+    setSubmitState(!submitState);
+  };
+
   const getTodayDate = () => {
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -14,7 +24,14 @@ const MachineApplyPopup = ({ openBool, openPopup }) => {
   };
 
   const closePopup = (e) => {
-    if (e.target.className) {
+    if (e.target.classList.contains("close")) {
+      setFormData({
+        student_id: "",
+        student_name: "",
+        device_type: "",
+        rental_date: getTodayDate(),
+      });
+      setCheckboxChecked(false);
       openPopup();
     }
   };
@@ -26,16 +43,40 @@ const MachineApplyPopup = ({ openBool, openPopup }) => {
     rental_date: getTodayDate(), // 오늘 날짜로 초기화
   });
 
+  useEffect(() => {
+    if (option == "labtop") {
+      MachineWrap.labtop.current.checked = true;
+      formData.device_type = "노트북";
+    } else {
+      MachineWrap.tablit.current.checked = true;
+      formData.device_type = "태블릿";
+    }
+  });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleCheckboxChange = (e) => {
+    setCheckboxChecked(e.target.checked); // 체크박스 상태 업데이트
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // 공백 체크: 학번, 이름, 기기 선택이 모두 입력되어야만 제출 가능
+    if (
+      !formData.student_id ||
+      !formData.student_name ||
+      !checkboxChecked // 체크박스가 체크되어야만 제출
+    ) {
+      alert("모든 필드를 입력해주세요.");
+      return; // 필드가 비어있으면 제출하지 않음
+    }
     try {
       const response = await axios.post(
-        "http://localhost:5000/submit_device_rental", 
+        "http://localhost:5000/submit_device_rental",
         formData,
         {
           headers: {
@@ -44,6 +85,18 @@ const MachineApplyPopup = ({ openBool, openPopup }) => {
         }
       );
       alert(response.data.message); // 성공 메시지 출력
+      submitStateHandler();
+      openPopup();
+      setSubmitState(true);
+
+      // 제출 후 상태 초기화
+      setFormData({
+        student_id: "",
+        student_name: "",
+        device_type: "",
+        rental_date: getTodayDate(),
+      });
+      setCheckboxChecked(false); // 체크박스 초기화
     } catch (error) {
       console.error("Error submitting application:", error);
       alert("신청에 실패했습니다. 다시 시도해주세요.");
@@ -52,11 +105,7 @@ const MachineApplyPopup = ({ openBool, openPopup }) => {
 
   return (
     <>
-      <Wrap
-        className="close"
-        onClick={closePopup}
-        style={{ display: openBool ? "flex" : "none" }}
-      >
+      <Wrap style={{ display: openBool && submitState ? "flex" : "none" }}>
         <ContentWrap>
           <RoomNumber>기기 대여신청</RoomNumber>
           <form onSubmit={handleSubmit}>
@@ -89,20 +138,22 @@ const MachineApplyPopup = ({ openBool, openPopup }) => {
               <RadioWrap>
                 <div>
                   <input
+                    ref={MachineWrap.labtop}
+                    id="labtop"
                     type="radio"
                     name="device_type"
                     value="노트북"
-                    checked={formData.device_type === "노트북"}
                     onChange={handleChange}
                   />
                   <label htmlFor="labtop">노트북</label>
                 </div>
                 <div>
                   <input
+                    ref={MachineWrap.tablit}
+                    id="tablit"
                     type="radio"
                     name="device_type"
                     value="태블릿"
-                    checked={formData.device_type === "태블릿"}
                     onChange={handleChange}
                   />
                   <label htmlFor="tablit">태블릿</label>
@@ -118,7 +169,12 @@ const MachineApplyPopup = ({ openBool, openPopup }) => {
               <label htmlFor="dangerTextCheck">
                 확인하였습니다<sup style={{ color: "red" }}>*</sup>
               </label>
-              <input type="checkbox" id="dangerTextCheck" />
+              <input
+                type="checkbox"
+                id="dangerTextCheck"
+                checked={checkboxChecked}
+                onChange={handleCheckboxChange} // 체크박스 상태 관리
+              />
             </div>
 
             <div
@@ -130,17 +186,16 @@ const MachineApplyPopup = ({ openBool, openPopup }) => {
                 gap: "10px",
               }}
             >
-              <RoundButton
+              <CancleButton
+                type="button"
                 className="close"
                 onClick={closePopup}
-                WhiteColor={true}
-                Text={"취소"}
-              />
-              <RoundButton
-                type="submit"
-                WhiteColor={false}
-                Text={"신청하기 "}
-              />
+              >
+                취소
+              </CancleButton>
+              <SubmitButton type="submit" className="close">
+                신청하기
+              </SubmitButton>
             </div>
           </form>
         </ContentWrap>
@@ -148,6 +203,32 @@ const MachineApplyPopup = ({ openBool, openPopup }) => {
     </>
   );
 };
+
+const SubmitButton = styled.button`
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: bold;
+  overflow: hidden;
+  word-break: keep-all;
+  outline: none;
+  border: none;
+  background-color: #0088ff;
+  color: white;
+`;
+
+const CancleButton = styled.button`
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: bold;
+  overflow: hidden;
+  word-break: keep-all;
+  outline: none;
+  border: none;
+`;
 
 const RadioWrap = styled.div`
   width: 100%;

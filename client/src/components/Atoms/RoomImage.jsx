@@ -3,7 +3,16 @@ import styled from "styled-components";
 const RoomImage = ({ selectRoom }) => {
   return (
     <>
-      <Wrap style={{ right: selectRoom && "45%" }} backImg={""} />
+      <Wrap
+        style={{ right: selectRoom && "45%" }}
+        backImg={
+          selectRoom == "308"
+            ? "../src/assets/img/308.png"
+            : selectRoom == "309"
+            ? "../src/assets/img/309.jpg"
+            : "../src/assets/img/LoadingRoom.png"
+        }
+      />
     </>
   );
 };

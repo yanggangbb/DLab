@@ -15,7 +15,6 @@ const SideMenu = ({ openSide, openSideCtrl, openPopup }) => {
   };
 
   useEffect(() => {
-    console.log(openSide);
     if (openSide) {
       SideWrap.current.setAttribute(
         "style",

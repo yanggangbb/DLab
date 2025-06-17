@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import RoundButton from "./RoundButton";
+import { Link } from "react-router-dom";
 
 const RoomInfor = ({ selectRoom, openPopupHandler }) => {
   const [roomData, setRoomData] = useState(null); // 방 데이터
@@ -75,7 +76,9 @@ const RoomInfor = ({ selectRoom, openPopupHandler }) => {
               <>
                 <InforText>-CPU : {roomData.cpu || "정보 없음"}</InforText>
                 <InforText>-GPU : {roomData.gpu || "정보 없음"}</InforText>
-                <InforText>-메모리 : {roomData.memory || "정보 없음"}</InforText>
+                <InforText>
+                  -메모리 : {roomData.memory || "정보 없음"}
+                </InforText>
                 <InforText>-디스크 : {roomData.disk || "정보 없음"}</InforText>
                 <InforText>
                   -설치 프로그램 : {roomData.program || "정보 없음"}
@@ -83,7 +86,9 @@ const RoomInfor = ({ selectRoom, openPopupHandler }) => {
                 <InforText>
                   -설치 언어 : {roomData.language || "정보 없음"}
                 </InforText>
-                <InforText>-특이사항 : {roomData.notes || "정보 없음"}</InforText>
+                <InforText>
+                  -특이사항 : {roomData.notes || "정보 없음"}
+                </InforText>
                 <InforText>
                   -컴퓨터 개수 : {roomData.count || "정보 없음"}
                 </InforText>
@@ -95,10 +100,12 @@ const RoomInfor = ({ selectRoom, openPopupHandler }) => {
         <ButtonWrap>
           <RoundButton
             openPopupHandler={openPopupHandler}
-            WhiteColor={true}
+            WhiteColor={false}
             Text={"신청하기"}
           />
-          <RoundButton WhiteColor={false} Text={"신청현황 조회"} />
+          <Link to={"/check"}>
+            <RoundButton WhiteColor={true} Text={"신청현황 조회"} />
+          </Link>
         </ButtonWrap>
       </ContentWrap>
     </Wrap>

@@ -34,6 +34,13 @@ const CheckSectionMachine = ({
     }
   };
 
+  const keyDownEvent = (e) => {
+    // console.log(e.code);
+    if (e.code === "Enter") {
+      fetchData();
+    }
+  };
+
   return (
     <Wrap>
       <TitleWrap>
@@ -43,6 +50,7 @@ const CheckSectionMachine = ({
 
       <InputWrap>
         <CheckInput
+          onKeyDown={keyDownEvent}
           placeholder={"ex) " + inputHint}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -53,8 +61,6 @@ const CheckSectionMachine = ({
         />
       </InputWrap>
 
-      {error && <ErrorMessage>{error}</ErrorMessage>}
-
       <ItemNameListHeader>
         {itemList.map((el, index) => (
           <ItemNameListHeaderName key={index}>{el}</ItemNameListHeaderName>
@@ -62,15 +68,17 @@ const CheckSectionMachine = ({
       </ItemNameListHeader>
 
       <ItemList>
+        {error && <ErrorMessage>{error}</ErrorMessage>}
         {data.length > 0 ? (
           data.map((row, index) => (
             <ItemRow key={index}>
               <ItemData>{row.student_id || "N/A"}</ItemData> {/* 학번 */}
               <ItemData>{row.student_name || "N/A"}</ItemData> {/* 이름 */}
-              <ItemData>{row.device_type || "N/A"}</ItemData> {/* 기기 */}
+              <ItemData>{row.device_type || "노트북"}</ItemData> {/* 기기 */}
               <ItemData>{row.device_number || "-"}</ItemData> {/* 기기번호 */}
               <ItemData>{row.rental_date || "N/A"}</ItemData> {/* 대여일자 */}
-              <ItemData>{row.return_date || "미반납"}</ItemData> {/* 반납일자 */}
+              <ItemData>{row.return_date || "미반납"}</ItemData>{" "}
+              {/* 반납일자 */}
             </ItemRow>
           ))
         ) : (
@@ -152,7 +160,7 @@ const ItemNameListHeader = styled.div`
 const ItemNameListHeaderName = styled.div`
   font-size: 18px;
   height: 100%;
-  flex-grow: 1;
+  width: 20%;
   color: black;
   display: flex;
   justify-content: center;
@@ -162,23 +170,32 @@ const ItemNameListHeaderName = styled.div`
 
 const ItemList = styled.div`
   width: 70%;
-`;
-
-const ItemRow = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  flex-direction: column;
+`;
+
+const ItemRow = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & > div:last-child {
+    border: none;
+  }
 `;
 
 const ItemData = styled.div`
-  font-size: 16px;
-  flex-grow: 1;
+  width: 20%;
+  padding: 10px 0px;
+  font-size: 18px;
   color: black;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-bottom: 1px solid gray;
+  border-right: 1px solid black;
 `;
 
 const NoData = styled.div`

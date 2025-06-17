@@ -14,7 +14,7 @@ const MainLinkSection = ({ LinkName, LinkIntroduce, LinkImg, LinkRouter }) => {
 };
 
 const Wrap = styled.div`
-  width: 30%;
+  width: 100%;
   padding: 30px;
   border-radius: 10px;
   display: flex;

@@ -104,7 +104,7 @@ def get_device_rentals(student_id=None, student_name=None):
 # 실습실 정보
 @app.route("/computer/<id>")
 def get_computer(id):
-    with open('D:\\SDHS\\24WebApp\\ai\\app\\data\\lab_data.json', 'r', encoding='utf-8') as file:
+    with open('C:\\Users\\jyn13\\OneDrive\\바탕 화면\\2024WebApp\\2024WebApp\\ai\\app\\data\\lab_data.json', 'r', encoding='utf-8') as file:
         data = json.load(file)
     computer_info = data.get(id)
     if computer_info:
@@ -188,7 +188,7 @@ def view_device_rentals():
 def admin_login():
     if request.method == 'POST':
         password = request.form.get('password')
-        if password == ADMIN_PASSWORD:
+        if password == 'adminsdhs!!':
             session['is_admin'] = True
             return redirect(url_for('admin_device'))
         else:

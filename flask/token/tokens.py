@@ -3,7 +3,7 @@ import requests
 url = 'https://kauth.kakao.com/oauth/token'
 rest_api_key = '378c15ff44a91970906607d2d645bb53'
 redirect_uri = 'https://example.com/oauth'
-authorize_code = 'WFrV92dlfZkEzoHPpP0DGz3O9BchjSaSBumuqOHFcNmxi1wVIdLNswAAAAQKPXPrAAABk5kZJlkSmUam6ZdnFg'
+authorize_code = 'BQvMwiHQBQQIMTmzL42XZPb4pqeAND0KErPChQV7CTtLv3IVRV01ywAAAAQKKiVTAAABk5qJDj_o6jj-qNQmaA'
 
 data = {
     'grant_type':'authorization_code',
@@ -19,5 +19,5 @@ print(tokens)
 # json 저장
 import json
 #1.
-with open(r"D:\\SDHS\\24WebApp\\flask\\token\\code.json","w") as fp:
+with open(r"C:\\Users\\jyn13\\OneDrive\\바탕 화면\\2024WebApp\\2024WebApp\\flask\\token\\code.json","w") as fp:
     json.dump(tokens, fp)

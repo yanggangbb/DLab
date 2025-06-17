@@ -3,7 +3,7 @@ import json
 
 def send_kakao_message(message):
     # 1. 토큰 로드
-    with open(r"D:\\SDHS\\24WebApp\\flask\\token\\code.json", "r") as fp:
+    with open(r"C:\\Users\\jyn13\\OneDrive\\바탕 화면\\2024WebApp\\2024WebApp\\flask\\token\\code.json", "r") as fp:
         tokens = json.load(fp)
 
     url = "https://kapi.kakao.com/v2/api/talk/memo/default/send"

@@ -5,7 +5,8 @@ import RoundButton from "../Atoms/RoundButton";
 
 const AIPopup = ({ openBool, openPopup }) => {
   const [answerStat, setAnswerStat] = useState(false);
-  const [aiAnswer, setAiAnswer] = useState("");  // AI 답변을 저장할 상태
+  const [aiAnswer, setAiAnswer] = useState(""); // AI 답변을 저장할 상태
+  const [classroomId, setClassroomId] = useState(""); // 실습실 번호 상태
   const [errorMessage, setErrorMessage] = useState(""); // 오류 메시지를 저장할 상태
   const [activity, setActivity] = useState(""); // 활동명 상태
 
@@ -13,17 +14,30 @@ const AIPopup = ({ openBool, openPopup }) => {
     if (e.target.classList.contains("close")) {
       openPopup();
     }
+
+    // 답변 상태가 true인 경우에는 상태 초기화
     if (answerStat === true) {
       setAnswerStat(false);
-      setAiAnswer("");  // 팝업 닫을 때 AI 답변 초기화
-      setErrorMessage("");  // 오류 메시지 초기화
+      setAiAnswer(""); // AI 답변 초기화
+      setClassroomId(""); // 실습실 번호 초기화
+      setErrorMessage(""); // 오류 메시지 초기화
     }
+
+    // 팝업 닫을 때 입력값 초기화
+    setActivity(""); // 활동명 입력값 초기화
   };
 
   const changeAnswerState = () => {
-    setAnswerStat(!answerStat);
+    if (activity.trim()) {
+      setAnswerStat(true);
+    } else {
+      alert("활동을 입력해주세요");
+    }
+
     if (!answerStat) {
-      fetchAiAnswer();  // 신청하기 클릭 시 AI 답변 요청
+      fetchAiAnswer(); // 신청하기 클릭 시 AI 답변 요청
+    } else {
+      openPopup();
     }
   };
 
@@ -33,6 +47,13 @@ const AIPopup = ({ openBool, openPopup }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // 활동명 입력이 비어있으면, AI 추천을 요청하지 않도록
+    if (activity.trim() === "") {
+      setErrorMessage("답변을 생성하고 있어요...."); // 오류 메시지 설정
+      return; // 빈 입력값일 경우 요청을 중단
+    }
+
     try {
       const response = await axios.post(
         "http://localhost:8000/recommend-classroom", // FastAPI 엔드포인트
@@ -45,21 +66,30 @@ const AIPopup = ({ openBool, openPopup }) => {
       );
       // 서버에서 받은 'explanation' 값을 상태에 저장
       setAiAnswer(response.data.explanation);
+      setClassroomId(response.data.classroom_id);
       setErrorMessage(""); // 오류 메시지 초기화
     } catch (error) {
       console.error("Error submitting application:", error);
       setAiAnswer(""); // AI 답변 초기화
+      setClassroomId("");
       setErrorMessage("답변을 불러오지 못했습니다. 다시 시도해주세요.");
     }
   };
 
   return (
-    <Wrap className="close" onClick={closePopup} style={{ display: openBool ? "flex" : "none" }}>
+    <Wrap style={{ display: openBool ? "flex" : "none" }}>
       <ContentWrap>
         <RoomNumber>AI 기반 실습실 추천</RoomNumber>
-        <form onSubmit={handleSubmit} style={{ gap: answerStat ? "0px" : "50px" }}>
+        <form
+          onSubmit={handleSubmit}
+          style={{ gap: answerStat ? "0px" : "50px" }}
+        >
           <FormWrap>
-            <FormLabel>{!answerStat ? "실습실에서 하고 싶은 활동을 간단하게 입력해주세요" : "AI가 최적의 실습실을 찾은 결과입니다"}</FormLabel>
+            <FormLabel>
+              {!answerStat
+                ? "실습실에서 하고 싶은 활동을 간단하게 입력해주세요"
+                : "AI가 최적의 실습실을 찾은 결과입니다"}
+            </FormLabel>
             <InputWrap style={{ display: answerStat ? "none" : "flex" }}>
               <input
                 name="activity"
@@ -71,22 +101,32 @@ const AIPopup = ({ openBool, openPopup }) => {
             </InputWrap>
             <AnswerWrap style={{ display: answerStat ? "flex" : "none" }}>
               <AiAnswerWrap>
-                <AiAnswer>
-                  {errorMessage ? errorMessage : aiAnswer}
-                </AiAnswer>
+                <AiAnswer>{errorMessage ? errorMessage : aiAnswer}</AiAnswer>
               </AiAnswerWrap>
               <div style={{ width: "100%" }}>
-                <img style={{ width: "80px" }} src="../src/assets/img/AIChar.png" alt="ai" />
+                <img
+                  style={{ width: "80px" }}
+                  src="../src/assets/img/AIChar.png"
+                  alt="ai"
+                />
               </div>
             </AnswerWrap>
           </FormWrap>
 
-          <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", gap: "10px" }}>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "10px",
+            }}
+          >
             <CancleButton className="close" onClick={closePopup} type="button">
               취소
             </CancleButton>
             <ApplyButton onClick={changeAnswerState} type="submit">
-              신청하기
+              {!answerStat ? "추천받기" : `${classroomId}호 신청하기`}
             </ApplyButton>
           </div>
         </form>
@@ -146,6 +186,7 @@ const CancleButton = styled.button`
 
 const ApplyButton = styled.button`
   background-color: #0088ff;
+  color: #fff;
   cursor: pointer;
   padding: 10px 20px;
   border-radius: 100px;

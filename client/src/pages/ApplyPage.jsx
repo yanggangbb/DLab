@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import ApplySideMenu from "../components/Atoms/ApplySideMenu";
 import Floor3 from "../components/Atoms/Floor3";
+import Floor4 from "../components/Atoms/Floor4";
 import RoomImage from "../components/Atoms/RoomImage";
 import RoomInfor from "../components/Atoms/RoomInfor";
 import { useEffect, useRef, useState } from "react";
@@ -28,6 +29,12 @@ const ApplyPage = ({ openAIPopup }) => {
     }
   });
 
+  const [floor, setFloor] = useState("3F");
+  const changeFloor = (f) => {
+    setFloor(f);
+    console.log(floor);
+  };
+
   return (
     <>
       <Wrap>
@@ -37,8 +44,11 @@ const ApplyPage = ({ openAIPopup }) => {
           selectRoom={selectRoom}
         />
         <ContentWrap ref={contentWrap}>
-          <ApplySideMenu openAIPopup={openAi} />
-          <Floor3 openInfor={openInfor} />
+          <ApplySideMenu openAIPopup={openAi} changeFloor={changeFloor} />
+
+          {floor == "3F" && <Floor3 openInfor={openInfor} />}
+          {floor == "4F" && <Floor4 openInfor={openInfor} />}
+
           <RoomInfor openPopupHandler={openPopup} selectRoom={selectRoom} />
           <RoomImage selectRoom={selectRoom} />
         </ContentWrap>

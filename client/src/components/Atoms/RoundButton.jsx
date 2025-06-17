@@ -1,12 +1,13 @@
 import styled from "styled-components";
 
-const RoundButton = ({ WhiteColor, Text, openPopupHandler }) => {
+const RoundButton = ({ btnType, WhiteColor, Text, openPopupHandler }) => {
   const openPopup = () => {
     openPopupHandler();
   };
   return (
     <>
       <Wrap
+        type={btnType}
         onClick={openPopup}
         style={{
           backgroundColor: WhiteColor ? "white" : "#0088FF",

@@ -3,6 +3,7 @@ import { SectionsContainer, Section } from "react-fullpage";
 import MainLinkSection from "../components/Layouts/MainLinkSection";
 import { useState, useEffect, useRef } from "react";
 import SideMenu from "../components/Layouts/SideMenu";
+import { Link } from "react-router-dom";
 
 const MainPage = () => {
   const TextWrap = useRef(null);
@@ -21,7 +22,7 @@ const MainPage = () => {
   return (
     <>
       <SectionsContainer {...options}>
-        <FullPageSection backImg={"../src/assets/img/background.png"}>
+        <FullPageSection backImg={"../src/assets/img/mainBack.png"}>
           <MainTextWrap ref={TextWrap}>
             <p>대여와 실습이 필요한 순간</p>
             <p>
@@ -34,38 +35,46 @@ const MainPage = () => {
 
         <FullPageSection backImg={"../src/assets/img/backGra.png"}>
           <MainLinkWrap>
-            <MainLinkSection
-              LinkName={"실습실 신청"}
-              LinkIntroduce={
-                "실습실을 지도에서 확인하고, 원하는 곳을 선택하여 바로 신청합니다."
-              }
-              LinkImg={"../src/assets/img/Room.png"}
-              LinkRouter={"신청하러가기 ▶"}
-            />
-            <MainLinkSection
-              LinkName={"AI 기반 실습실 추천"}
-              LinkIntroduce={
-                "실습실에서 하고싶은 활동을 입력하면 AI 기반으로 최적의 실습실을 추천합니다."
-              }
-              LinkImg={"../src/assets/img/Ai.png"}
-              LinkRouter={"추천받으러가기 ▶"}
-            />
-            <MainLinkSection
-              LinkName={"노트북/태블릿 대여"}
-              LinkIntroduce={
-                "조교실에 가지 않고 간편하게 노트북/태블릿 대여를 신청합니다."
-              }
-              LinkImg={"../src/assets/img/Phone.png"}
-              LinkRouter={"신청하러가기 ▶"}
-            />
-            <MainLinkSection
-              LinkName={"신청조회"}
-              LinkIntroduce={
-                "호실, 학번으로 실습실 신청 현황 및 노트북/태블릿 대여 현황을 조회합니다."
-              }
-              LinkImg={"../src/assets/img/getList.png"}
-              LinkRouter={"신청하러가기 ▶"}
-            />
+            <Link to={"/apply"}>
+              <MainLinkSection
+                LinkName={"실습실 신청"}
+                LinkIntroduce={
+                  "실습실을 지도에서 확인하고, 원하는 곳을 선택하여 바로 신청합니다."
+                }
+                LinkImg={"../src/assets/img/Room.png"}
+                LinkRouter={"신청하러가기 ▶"}
+              />
+            </Link>
+            <Link to={"/apply"}>
+              <MainLinkSection
+                LinkName={"AI 기반 실습실 추천"}
+                LinkIntroduce={
+                  "실습실에서 하고싶은 활동을 입력하면 AI 기반으로 최적의 실습실을 추천합니다."
+                }
+                LinkImg={"../src/assets/img/Ai.png"}
+                LinkRouter={"추천받으러가기 ▶"}
+              />
+            </Link>
+            <Link to={"/machineApply"}>
+              <MainLinkSection
+                LinkName={"노트북/태블릿 대여"}
+                LinkIntroduce={
+                  "조교실에 가지 않고 간편하게 노트북/태블릿 대여를 신청합니다."
+                }
+                LinkImg={"../src/assets/img/Phone.png"}
+                LinkRouter={"신청하러가기 ▶"}
+              />
+            </Link>
+            <Link to={"/check"}>
+              <MainLinkSection
+                LinkName={"신청조회"}
+                LinkIntroduce={
+                  "호실, 학번으로 실습실 신청 현황 및 노트북/태블릿 대여 현황을 조회합니다."
+                }
+                LinkImg={"../src/assets/img/getList.png"}
+                LinkRouter={"신청하러가기 ▶"}
+              />
+            </Link>
           </MainLinkWrap>
         </FullPageSection>
       </SectionsContainer>
@@ -161,6 +170,9 @@ const MainLinkWrap = styled.div`
   justify-content: center;
   align-items: center;
   gap: 80px;
+  & > a {
+    width: 30%;
+  }
 `;
 
 export default MainPage;

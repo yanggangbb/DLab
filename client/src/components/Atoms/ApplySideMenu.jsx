@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
 
-const ApplySideMenu = ({ openAIPopup }) => {
+const ApplySideMenu = ({ openAIPopup, changeFloor }) => {
   const [floor, setFloor] = useState("3F");
 
   const AIPopupOpen = () => {
@@ -12,6 +12,7 @@ const ApplySideMenu = ({ openAIPopup }) => {
     document.querySelector(".floorName.active").classList.remove("active");
     e.target.classList.toggle("active");
     setFloor(e.target.textContent);
+    changeFloor(e.target.textContent);
   };
 
   return (
